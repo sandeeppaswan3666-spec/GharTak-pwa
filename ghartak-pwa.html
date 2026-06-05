@@ -191,6 +191,56 @@
   /* SECTION DIVIDER */
   .divider { height: 8px; background: var(--black); }
 
+  /* ===== AUTH PAGE ===== */
+  .auth-page { min-height: 100vh; padding: 0 0 80px; }
+  .auth-hero { background: linear-gradient(160deg, #000 0%, #1a1200 60%, #000 100%); padding: 40px 24px 32px; text-align: center; position: relative; overflow: hidden; }
+  .auth-hero::before { content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%); width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,215,0,0.12) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+  .auth-logo { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; color: var(--gold); letter-spacing: 4px; margin-bottom: 6px; }
+  .auth-tagline { color: var(--gray); font-size: 0.8rem; letter-spacing: 2px; }
+
+  .auth-tabs { display: flex; margin: 0 16px 20px; background: var(--dark2); border-radius: 14px; padding: 4px; border: 1px solid rgba(255,215,0,0.1); }
+  .auth-tab { flex: 1; padding: 10px; text-align: center; border-radius: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.25s; color: var(--gray); border: none; background: none; font-family: 'DM Sans', sans-serif; }
+  .auth-tab.active { background: var(--gold); color: var(--black); }
+
+  .auth-form { padding: 0 16px; display: flex; flex-direction: column; gap: 14px; }
+  .auth-form.hidden { display: none; }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label { font-size: 0.8rem; color: var(--gray); font-weight: 500; letter-spacing: 0.5px; }
+  .form-input { background: var(--dark2); border: 1px solid rgba(255,215,0,0.15); border-radius: 12px; padding: 14px 16px; color: var(--white); font-size: 0.95rem; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s; width: 100%; }
+  .form-input:focus { border-color: var(--gold); }
+  .form-input::placeholder { color: #555; }
+
+  .password-wrap { position: relative; }
+  .password-wrap .form-input { padding-right: 48px; }
+  .toggle-pass { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--gray); cursor: pointer; font-size: 1.1rem; padding: 4px; }
+
+  .auth-btn { width: 100%; background: var(--gold); color: var(--black); border: none; border-radius: 14px; padding: 16px; font-size: 1rem; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s; margin-top: 4px; }
+  .auth-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .auth-btn-spinner { width: 18px; height: 18px; border: 2px solid rgba(0,0,0,0.3); border-top-color: #000; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .auth-divider { display: flex; align-items: center; gap: 12px; padding: 0 0; }
+  .auth-divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+  .auth-divider-text { color: var(--gray); font-size: 0.75rem; }
+
+  .auth-google-btn { width: 100%; background: var(--dark2); color: var(--white); border: 1px solid rgba(255,215,0,0.15); border-radius: 14px; padding: 14px; font-size: 0.9rem; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; display: flex; align-items: center; justify-content: center; gap: 10px; transition: border-color 0.2s; }
+  .auth-google-btn:hover { border-color: rgba(255,215,0,0.35); }
+
+  .auth-error { background: rgba(255,61,0,0.1); border: 1px solid rgba(255,61,0,0.3); border-radius: 10px; padding: 10px 14px; color: #ff6b47; font-size: 0.82rem; text-align: center; display: none; }
+  .auth-error.show { display: block; }
+  .auth-success { background: rgba(0,200,83,0.1); border: 1px solid rgba(0,200,83,0.3); border-radius: 10px; padding: 10px 14px; color: var(--success); font-size: 0.82rem; text-align: center; display: none; }
+  .auth-success.show { display: block; }
+
+  .auth-note { text-align: center; font-size: 0.75rem; color: var(--gray); line-height: 1.5; padding: 0 8px; }
+  .auth-note a { color: var(--gold); text-decoration: none; }
+
+  /* LOGGED IN PROFILE */
+  .profile-logged-in { background: linear-gradient(135deg, #000, #1a1400); padding: 30px 16px 20px; text-align: center; }
+  .profile-initials { width: 72px; height: 72px; background: rgba(255,215,0,0.15); border: 2px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 700; color: var(--gold); margin: 0 auto 12px; font-family: 'Playfair Display', serif; }
+  .logout-btn { margin: 12px 16px 0; width: calc(100% - 32px); background: transparent; color: var(--danger); border: 1px solid rgba(255,61,0,0.3); border-radius: 12px; padding: 12px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+  .logout-btn:hover { background: rgba(255,61,0,0.08); border-color: var(--danger); }
+
   /* OFFERS BANNER */
   .offers-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 0 16px 4px; scrollbar-width: none; }
   .offers-scroll::-webkit-scrollbar { display: none; }
@@ -365,44 +415,88 @@
 
 <!-- PROFILE PAGE -->
 <div class="page" id="profile-page">
-  <div class="profile-header">
-    <div class="profile-avatar">👤</div>
-    <div class="profile-name">Guest User</div>
-    <div class="profile-sub">Sign in to access all features</div>
+  <!-- GUEST VIEW -->
+  <div id="profile-guest">
+    <div class="profile-header">
+      <div class="profile-avatar">👤</div>
+      <div class="profile-name">Guest User</div>
+      <div class="profile-sub">Sign in to access all features</div>
+    </div>
+    <div class="menu-list">
+      <div class="menu-item" onclick="showPage('auth-page')">
+        <div class="menu-icon">🔑</div>
+        <div class="menu-text"><strong>Sign In / Register</strong><span>Access your account</span></div>
+        <span class="menu-arrow">›</span>
+      </div>
+      <div class="menu-item" onclick="showPage('orders-page')">
+        <div class="menu-icon">📦</div>
+        <div class="menu-text"><strong>My Orders</strong><span>Track your orders</span></div>
+        <span class="menu-arrow">›</span>
+      </div>
+      <div class="menu-item" onclick="showPage('wishlist-page')">
+        <div class="menu-icon">❤️</div>
+        <div class="menu-text"><strong>Wishlist</strong><span>Saved products</span></div>
+        <span class="menu-arrow">›</span>
+      </div>
+      <div class="menu-item" onclick="window.open('https://wa.me/919277147289','_blank')">
+        <div class="menu-icon">💬</div>
+        <div class="menu-text"><strong>WhatsApp Support</strong><span>+91 92771 47289</span></div>
+        <span class="menu-arrow">›</span>
+      </div>
+      <div class="menu-item" onclick="window.open('https://www.instagram.com/ghartak.store','_blank')">
+        <div class="menu-icon">📸</div>
+        <div class="menu-text"><strong>Follow on Instagram</strong><span>@ghartak.store</span></div>
+        <span class="menu-arrow">›</span>
+      </div>
+      <div class="menu-item" onclick="window.open('https://ghartak.store','_blank')">
+        <div class="menu-icon">🌐</div>
+        <div class="menu-text"><strong>Visit Website</strong><span>ghartak.store</span></div>
+        <span class="menu-arrow">›</span>
+      </div>
+      <div style="background:var(--dark2);border:1px solid rgba(255,215,0,0.1);border-radius:14px;padding:16px;margin:8px 16px 0;text-align:center">
+        <div style="font-size:0.75rem;color:var(--gray)">GHARTAK v2.0 • Made with ❤️ in India</div>
+        <div style="font-size:0.75rem;color:var(--gold);margin-top:4px">⚡ 15 Minute Delivery</div>
+      </div>
+    </div>
   </div>
-  <div class="menu-list">
-    <div class="menu-item" onclick="window.open('https://ghartak.store/account/login','_blank')">
-      <div class="menu-icon">🔑</div>
-      <div class="menu-text"><strong>Sign In / Register</strong><span>Access your account</span></div>
-      <span class="menu-arrow">›</span>
+
+  <!-- LOGGED IN VIEW -->
+  <div id="profile-loggedin" style="display:none">
+    <div class="profile-logged-in">
+      <div class="profile-initials" id="profile-initials">👤</div>
+      <div class="profile-name" id="profile-fullname">—</div>
+      <div class="profile-sub" id="profile-email-display">—</div>
     </div>
-    <div class="menu-item" onclick="showPage('orders-page')">
-      <div class="menu-icon">📦</div>
-      <div class="menu-text"><strong>My Orders</strong><span>Track your orders</span></div>
-      <span class="menu-arrow">›</span>
+    <div class="menu-list">
+      <div class="menu-item" onclick="window.open('https://ghartak.store/account','_blank')">
+        <div class="menu-icon">👤</div>
+        <div class="menu-text"><strong>Mera Account</strong><span>Details & address manage karein</span></div>
+        <span class="menu-arrow">›</span>
+      </div>
+      <div class="menu-item" onclick="window.open('https://ghartak.store/account/orders','_blank')">
+        <div class="menu-icon">📦</div>
+        <div class="menu-text"><strong>My Orders</strong><span>Track your orders</span></div>
+        <span class="menu-arrow">›</span>
+      </div>
+      <div class="menu-item" onclick="showPage('wishlist-page')">
+        <div class="menu-icon">❤️</div>
+        <div class="menu-text"><strong>Wishlist</strong><span>Saved products</span></div>
+        <span class="menu-arrow">›</span>
+      </div>
+      <div class="menu-item" onclick="window.open('https://wa.me/919277147289','_blank')">
+        <div class="menu-icon">💬</div>
+        <div class="menu-text"><strong>WhatsApp Support</strong><span>+91 92771 47289</span></div>
+        <span class="menu-arrow">›</span>
+      </div>
+      <div class="menu-item" onclick="window.open('https://www.instagram.com/ghartak.store','_blank')">
+        <div class="menu-icon">📸</div>
+        <div class="menu-text"><strong>Follow on Instagram</strong><span>@ghartak.store</span></div>
+        <span class="menu-arrow">›</span>
+      </div>
     </div>
-    <div class="menu-item" onclick="showPage('wishlist-page')">
-      <div class="menu-icon">❤️</div>
-      <div class="menu-text"><strong>Wishlist</strong><span>Saved products</span></div>
-      <span class="menu-arrow">›</span>
-    </div>
-    <div class="menu-item" onclick="window.open('https://wa.me/919277147289','_blank')">
-      <div class="menu-icon">💬</div>
-      <div class="menu-text"><strong>WhatsApp Support</strong><span>+91 92771 47289</span></div>
-      <span class="menu-arrow">›</span>
-    </div>
-    <div class="menu-item" onclick="window.open('https://www.instagram.com/ghartak.store','_blank')">
-      <div class="menu-icon">📸</div>
-      <div class="menu-text"><strong>Follow on Instagram</strong><span>@ghartak.store</span></div>
-      <span class="menu-arrow">›</span>
-    </div>
-    <div class="menu-item" onclick="window.open('https://ghartak.store','_blank')">
-      <div class="menu-icon">🌐</div>
-      <div class="menu-text"><strong>Visit Website</strong><span>ghartak.store</span></div>
-      <span class="menu-arrow">›</span>
-    </div>
-    <div style="background:var(--dark2);border:1px solid rgba(255,215,0,0.1);border-radius:14px;padding:16px;margin-top:8px;text-align:center">
-      <div style="font-size:0.75rem;color:var(--gray)">GHARTAK v1.0 • Made with ❤️ in India</div>
+    <button class="logout-btn" onclick="doLogout()">🚪 Logout</button>
+    <div style="background:var(--dark2);border:1px solid rgba(255,215,0,0.1);border-radius:14px;padding:16px;margin:12px 16px 0;text-align:center">
+      <div style="font-size:0.75rem;color:var(--gray)">GHARTAK v2.0 • Made with ❤️ in India</div>
       <div style="font-size:0.75rem;color:var(--gold);margin-top:4px">⚡ 15 Minute Delivery</div>
     </div>
   </div>
@@ -415,6 +509,102 @@
     <div class="detail-title">Product Details</div>
   </div>
   <div id="detail-content"></div>
+</div>
+
+<!-- AUTH PAGE (Login / Register) -->
+<div class="page" id="auth-page">
+  <div class="auth-page">
+    <div class="auth-hero">
+      <div class="auth-logo">GHARTAK</div>
+      <div class="auth-tagline">FRESHNESS DELIVERED ⚡</div>
+    </div>
+
+    <!-- TABS -->
+    <div style="padding:20px 16px 0">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
+        <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Register</button>
+      </div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="auth-form" id="login-form">
+      <div class="auth-error" id="login-error"></div>
+      <div class="auth-success" id="login-success"></div>
+
+      <div class="form-group">
+        <label class="form-label">EMAIL ADDRESS</label>
+        <input type="email" class="form-input" id="login-email" placeholder="aapka@email.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">PASSWORD</label>
+        <div class="password-wrap">
+          <input type="password" class="form-input" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+          <button class="toggle-pass" onclick="togglePassword('login-pass', this)" type="button">👁</button>
+        </div>
+      </div>
+
+      <button class="auth-btn" id="login-btn" onclick="doLogin()">
+        <span>Sign In</span>
+      </button>
+
+      <div class="auth-note">
+        Pasword bhool gaye? <a href="https://ghartak.store/account/login#recover" target="_blank">Reset karein →</a>
+      </div>
+
+      <div class="auth-divider">
+        <div class="auth-divider-line"></div>
+        <div class="auth-divider-text">ya phir</div>
+        <div class="auth-divider-line"></div>
+      </div>
+
+      <button class="auth-google-btn" onclick="window.open('https://ghartak.store/account/login','_blank')">
+        🌐 &nbsp;Website pe Login karein
+      </button>
+
+      <div class="auth-note" style="margin-top:4px">
+        Abhi account nahi hai? <button style="background:none;border:none;color:var(--gold);font-size:0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0" onclick="switchAuthTab('register')">Register karein →</button>
+      </div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div class="auth-form hidden" id="register-form">
+      <div class="auth-error" id="register-error"></div>
+      <div class="auth-success" id="register-success"></div>
+
+      <div class="form-group">
+        <label class="form-label">PEHLA NAAM</label>
+        <input type="text" class="form-input" id="reg-first" placeholder="Rahul" autocomplete="given-name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">AAKHRI NAAM</label>
+        <input type="text" class="form-input" id="reg-last" placeholder="Sharma" autocomplete="family-name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">EMAIL ADDRESS</label>
+        <input type="email" class="form-input" id="reg-email" placeholder="aapka@email.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">PASSWORD (min 5 characters)</label>
+        <div class="password-wrap">
+          <input type="password" class="form-input" id="reg-pass" placeholder="••••••••" autocomplete="new-password">
+          <button class="toggle-pass" onclick="togglePassword('reg-pass', this)" type="button">👁</button>
+        </div>
+      </div>
+
+      <button class="auth-btn" id="register-btn" onclick="doRegister()">
+        <span>Account Banao 🎉</span>
+      </button>
+
+      <div class="auth-note">
+        Register karke aap hamare <a href="https://ghartak.store/policies/terms-of-service" target="_blank">Terms of Service</a> se agree karte hain.
+      </div>
+
+      <div class="auth-note" style="margin-top:4px">
+        Pehle se account hai? <button style="background:none;border:none;color:var(--gold);font-size:0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0" onclick="switchAuthTab('login')">Sign In karein →</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- BOTTOM NAV -->
@@ -646,12 +836,16 @@ function closeDetail() {
 }
 
 // ===================== CART =====================
+function getVariantId(product) {
+  return product.variants && product.variants[0] ? product.variants[0].id : null;
+}
+
 function addToCart(id) {
   const p = allProducts.find(x => x.id === id);
   if (!p) return;
   const existing = cart.find(c => c.id === id);
   if (existing) { existing.qty++; }
-  else { cart.push({ id, title: p.title, price: getPrice(p), img: getProductImg(p), qty: 1 }); }
+  else { cart.push({ id, title: p.title, price: getPrice(p), img: getProductImg(p), qty: 1, variantId: getVariantId(p) }); }
   saveCart();
   showToast(`${p.title.slice(0,20)}... added! 🛒`);
   if (currentPage === 'cart-page') renderCart();
@@ -715,7 +909,14 @@ function renderCart() {
 }
 
 function checkout() {
-  window.open('https://ghartak.store/cart', '_blank');
+  if (cart.length === 0) return;
+  const validItems = cart.filter(c => c.variantId);
+  if (validItems.length > 0) {
+    const cartStr = validItems.map(c => `${c.variantId}:${c.qty}`).join(',');
+    window.open(`https://ghartak.store/cart/${cartStr}`, '_blank');
+  } else {
+    window.open('https://ghartak.store/cart', '_blank');
+  }
 }
 
 // ===================== WISHLIST =====================
@@ -770,6 +971,8 @@ function showPage(pageId) {
   if (navMap[pageId]) document.getElementById(navMap[pageId]).classList.add('active');
   if (pageId === 'cart-page') renderCart();
   if (pageId === 'wishlist-page') renderWishlist();
+  if (pageId === 'profile-page') initAuth();
+  if (pageId === 'auth-page') switchAuthTab('login');
   window.scrollTo(0, 0);
 }
 
@@ -781,9 +984,202 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+// ===================== AUTH =====================
+const SHOPIFY_STORE = 'ghartak.store';
+const SHOPIFY_STOREFRONT_TOKEN = 'YOUR_STOREFRONT_API_TOKEN'; // 👈 Replace with actual token
+
+let currentUser = JSON.parse(localStorage.getItem('gt_user') || 'null');
+
+function initAuth() {
+  if (currentUser) showLoggedInProfile();
+  else showGuestProfile();
+}
+
+function showLoggedInProfile() {
+  document.getElementById('profile-guest').style.display = 'none';
+  document.getElementById('profile-loggedin').style.display = 'block';
+  const name = (currentUser.firstName || '') + ' ' + (currentUser.lastName || '');
+  const initials = [(currentUser.firstName || '?')[0], (currentUser.lastName || '?')[0]].join('').toUpperCase();
+  document.getElementById('profile-fullname').textContent = name.trim() || 'User';
+  document.getElementById('profile-email-display').textContent = currentUser.email || '';
+  document.getElementById('profile-initials').textContent = initials;
+}
+
+function showGuestProfile() {
+  document.getElementById('profile-guest').style.display = 'block';
+  document.getElementById('profile-loggedin').style.display = 'none';
+}
+
+function switchAuthTab(tab) {
+  document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('register-form').classList.toggle('hidden', tab !== 'register');
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  // Clear errors
+  ['login-error','login-success','register-error','register-success'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.className = el.className.replace(' show',''); el.textContent = ''; }
+  });
+}
+
+function togglePassword(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+
+function setAuthLoading(btnId, loading, label='') {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.innerHTML = loading
+    ? `<div class="auth-btn-spinner"></div>`
+    : `<span>${label}</span>`;
+}
+
+function showAuthMsg(elId, msg, isError=true) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.textContent = msg;
+  el.className = el.className.replace(' show', '') + ' show';
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const errEl = 'login-error';
+  const sucEl = 'login-success';
+
+  if (!email || !pass) { showAuthMsg(errEl, '⚠️ Email aur password dono daalo'); return; }
+
+  setAuthLoading('login-btn', true);
+
+  // --- Shopify Storefront API customerAccessTokenCreate ---
+  const query = `
+    mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
+      customerAccessTokenCreate(input: $input) {
+        customerAccessToken { accessToken expiresAt }
+        customerUserErrors { code message field }
+      }
+    }
+  `;
+  try {
+    const res = await fetch(`https://${SHOPIFY_STORE}/api/2024-01/graphql.json`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN
+      },
+      body: JSON.stringify({ query, variables: { input: { email, password: pass } } })
+    });
+    const json = await res.json();
+    const result = json?.data?.customerAccessTokenCreate;
+    const errors = result?.customerUserErrors || [];
+
+    if (errors.length > 0) {
+      const msg = errors[0].code === 'UNIDENTIFIED_CUSTOMER'
+        ? '❌ Email ya password galat hai'
+        : errors[0].message;
+      showAuthMsg(errEl, msg);
+      setAuthLoading('login-btn', false, 'Sign In');
+      return;
+    }
+
+    const token = result?.customerAccessToken?.accessToken;
+    if (token) {
+      // Fetch customer details
+      await fetchAndSaveCustomer(token);
+      showAuthMsg(sucEl, '✅ Login ho gaya! Welcome back 🎉', false);
+      setTimeout(() => { showPage('profile-page'); initAuth(); }, 1200);
+    }
+  } catch (e) {
+    // Storefront API token not configured — show helpful fallback
+    showAuthMsg(errEl, '⚠️ Abhi direct login available nahi. Website pe login karein ↓');
+  }
+  setAuthLoading('login-btn', false, 'Sign In');
+}
+
+async function fetchAndSaveCustomer(token) {
+  const q = `{ customer(customerAccessToken: "${token}") { firstName lastName email } }`;
+  try {
+    const r = await fetch(`https://${SHOPIFY_STORE}/api/2024-01/graphql.json`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN },
+      body: JSON.stringify({ query: q })
+    });
+    const j = await r.json();
+    const c = j?.data?.customer;
+    if (c) {
+      currentUser = { ...c, accessToken: token };
+      localStorage.setItem('gt_user', JSON.stringify(currentUser));
+    }
+  } catch {}
+}
+
+async function doRegister() {
+  const first = document.getElementById('reg-first').value.trim();
+  const last = document.getElementById('reg-last').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const errEl = 'register-error';
+  const sucEl = 'register-success';
+
+  if (!first || !email || !pass) { showAuthMsg(errEl, '⚠️ Saare fields fill karein'); return; }
+  if (pass.length < 5) { showAuthMsg(errEl, '⚠️ Password kam se kam 5 characters ka hona chahiye'); return; }
+
+  setAuthLoading('register-btn', true);
+
+  const query = `
+    mutation customerCreate($input: CustomerCreateInput!) {
+      customerCreate(input: $input) {
+        customer { id firstName lastName email }
+        customerUserErrors { code message field }
+      }
+    }
+  `;
+  try {
+    const res = await fetch(`https://${SHOPIFY_STORE}/api/2024-01/graphql.json`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN
+      },
+      body: JSON.stringify({ query, variables: { input: { firstName: first, lastName: last, email, password: pass } } })
+    });
+    const json = await res.json();
+    const result = json?.data?.customerCreate;
+    const errors = result?.customerUserErrors || [];
+
+    if (errors.length > 0) {
+      const msg = errors[0].code === 'TAKEN'
+        ? '❌ Ye email already registered hai. Sign In karein!'
+        : errors[0].message;
+      showAuthMsg(errEl, msg);
+      setAuthLoading('register-btn', false, 'Account Banao 🎉');
+      return;
+    }
+
+    if (result?.customer) {
+      showAuthMsg(sucEl, '🎉 Account ban gaya! Ab Sign In karein.', false);
+      setTimeout(() => switchAuthTab('login'), 2000);
+    }
+  } catch (e) {
+    showAuthMsg(errEl, '⚠️ Abhi registration available nahi. Website pe try karein ↓');
+  }
+  setAuthLoading('register-btn', false, 'Account Banao 🎉');
+}
+
+function doLogout() {
+  currentUser = null;
+  localStorage.removeItem('gt_user');
+  showGuestProfile();
+  showToast('Logout ho gaye 👋');
+}
+
 // ===================== INIT =====================
 updateCartBadge();
 fetchProducts();
+initAuth();
 </script>
 </body>
 </html>
