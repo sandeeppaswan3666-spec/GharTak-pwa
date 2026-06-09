@@ -760,6 +760,37 @@ let wishlist = JSON.parse(localStorage.getItem('gt_wish') || '[]');
 let currentPage = 'home-page';
 let selectedVariants = {}; // productId -> variantIndex
 
+// ===================== MIGRATE OLD CART =====================
+// Old cart items didn't have cartKey - add it for backward compatibility
+function migrateCart() {
+  let changed = false;
+  cart.forEach(item => {
+    if (!item.cartKey) {
+      item.cartKey = item.variantId ? `${item.id}_${item.variantId}` : `${item.id}`;
+      changed = true;
+    }
+  });
+  if (changed) saveCart();
+}
+migrateCart();
+
+// ===================== PAGE RENDER CACHE =====================
+const pageRendered = {
+  'home-page': false,
+  'categories-page': false,
+  'products-page': false,
+  'cart-page': false,
+  'orders-page': false,
+  'wishlist-page': false,
+  'profile-page': false,
+  'auth-page': false,
+  'search-page': false
+};
+function invalidatePage(pageId) { pageRendered[pageId] = false; }
+function invalidateAllPages() {
+  Object.keys(pageRendered).forEach(k => pageRendered[k] = false);
+}
+
 // ===================== VARIANT HELPERS =====================
 function getVariants(product) {
   return product.variants || [];
@@ -864,10 +895,13 @@ function renderAll() {
   renderFeatured();
   renderAllProducts();
   updateCartBadge();
+  pageRendered['home-page'] = true;
   // Defer non-critical renders
   requestAnimationFrame(() => {
     renderCatsPage();
+    pageRendered['categories-page'] = true;
     renderAllProductsPage();
+    pageRendered['products-page'] = true;
   });
 }
 
@@ -1014,7 +1048,16 @@ function renderFeatured() {
 }
 
 function renderAllProducts() {
-  document.getElementById('all-products-grid').innerHTML = renderProductCards(allProducts);
+  // Limit home page to 12 products for fast render; full catalog on products page
+  const limit = 12;
+  const slice = allProducts.slice(0, limit);
+  let html = renderProductCards(slice);
+  if (allProducts.length > limit) {
+    html += `<div style="grid-column:1/-1;text-align:center;padding:16px 0">
+      <button class="checkout-btn" style="width:auto;padding:10px 24px;font-size:0.85rem" onclick="showPage('products-page')">📋 View All ${allProducts.length} Products</button>
+    </div>`;
+  }
+  document.getElementById('all-products-grid').innerHTML = html;
 }
 
 function renderAllProductsPage() {
@@ -1147,15 +1190,31 @@ function addToCartEnhanced(id, btnEl) {
   }
 }
 
+function resolveCartKey(item) {
+  // Always return a valid string key for a cart item
+  return item.cartKey || (item.variantId ? `${item.id}_${item.variantId}` : `${item.id}`);
+}
+
+function findCartItem(cartKey) {
+  if (!cartKey || cartKey === 'undefined') return null;
+  // Try cartKey first, then fall back to id-based lookup
+  return cart.find(c => c.cartKey === cartKey) || cart.find(c => c.id === parseInt(cartKey.split('_')[0])) || null;
+}
+
 function removeFromCart(cartKey) {
-  cart = cart.filter(c => c.cartKey !== cartKey);
+  if (!cartKey || cartKey === 'undefined') return;
+  const targetId = parseInt(cartKey.split('_')[0]);
+  cart = cart.filter(c => c.cartKey !== cartKey && c.id !== targetId);
   saveCart();
   renderCart();
 }
 
 function updateQty(cartKey, delta) {
-  const item = cart.find(c => c.cartKey === cartKey);
-  if (!item) return;
+  const item = findCartItem(cartKey);
+  if (!item) {
+    console.warn('Cart item not found for key:', cartKey);
+    return;
+  }
   item.qty += delta;
   if (item.qty <= 0) removeFromCart(cartKey);
   else { saveCart(); renderCart(); }
@@ -1164,6 +1223,7 @@ function updateQty(cartKey, delta) {
 function saveCart() {
   localStorage.setItem('gt_cart', JSON.stringify(cart));
   updateCartBadge();
+  invalidatePage('cart-page');
 }
 
 function updateCartBadge() {
@@ -1177,32 +1237,49 @@ function renderCart() {
   const el = document.getElementById('cart-content');
   if (cart.length === 0) {
     el.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🛒</div><h3>Your cart is empty</h3><button class="checkout-btn" style="width:auto;padding:12px 24px" onclick="showPage('home-page')">Start Shopping</button></div>`;
+    pageRendered['cart-page'] = true;
     return;
   }
   const total = cart.reduce((s, c) => s + parseFloat(c.price) * c.qty, 0);
   el.innerHTML = `
-    <div class="cart-list">
-      ${cart.map(item => `
-        <div class="cart-item">
-          <div class="cart-item-img">${item.img ? `<img src="${item.img}" style="width:60px;height:60px;border-radius:10px;object-fit:cover">` : '🛒'}</div>
+    <div class="cart-list" id="cart-list">
+      ${cart.map(item => {
+        const itemKey = resolveCartKey(item);
+        return `
+        <div class="cart-item" data-key="${itemKey}">
+          <div class="cart-item-img">${item.img ? `<img src="${item.img}" style="width:60px;height:60px;border-radius:10px;object-fit:cover" alt="">` : '🛒'}</div>
           <div class="cart-item-details">
             <div class="cart-item-name">${item.title}</div>
             ${item.variantTitle ? `<div class="cart-item-variant">${item.variantTitle}</div>` : ''}
             <div class="cart-item-price">₹${(parseFloat(item.price) * item.qty).toFixed(0)}</div>
           </div>
           <div class="qty-controls">
-            <button class="qty-btn" onclick="updateQty('${item.cartKey}',-1)">−</button>
-            <span class="qty-num">${item.qty}</span>
-            <button class="qty-btn" onclick="updateQty('${item.cartKey}',1)">+</button>
+            <button class="qty-btn" data-action="dec" data-key="${itemKey}">−</button>
+            <span class="qty-num" id="qty-${itemKey}">${item.qty}</span>
+            <button class="qty-btn" data-action="inc" data-key="${itemKey}">+</button>
           </div>
-        </div>
-      `).join('')}
+        </div>`;
+      }).join('')}
     </div>
     <div class="cart-footer">
       <div class="cart-total"><span>Total (${cart.reduce((s,c)=>s+c.qty,0)} items)</span><span>₹${total.toFixed(0)}</span></div>
       <button class="checkout-btn" onclick="checkout()">🛒 Proceed to Checkout</button>
     </div>
   `;
+  // Attach event listener once to the list for all qty buttons
+  const list = document.getElementById('cart-list');
+  if (list) {
+    list._handler = list._handler || function(e) {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      const key = btn.dataset.key;
+      const action = btn.dataset.action;
+      if (action === 'inc') updateQty(key, 1);
+      else if (action === 'dec') updateQty(key, -1);
+    };
+    list.onclick = list._handler;
+  }
+  pageRendered['cart-page'] = true;
 }
 
 function checkout() {
@@ -1224,6 +1301,7 @@ function toggleWish(id, btnEl) {
   if (idx >= 0) { wishlist.splice(idx, 1); showToast('Removed from wishlist'); }
   else { wishlist.push({ id, title: p.title, price: getPrice(p), img: getProductImg(p) }); showToast('Added to wishlist ❤️'); }
   localStorage.setItem('gt_wish', JSON.stringify(wishlist));
+  invalidatePage('wishlist-page');
   const inWish = wishlist.some(w => w.id === id);
   if (!btnEl) btnEl = document.getElementById(`wish-${id}`);
   if (btnEl) {
@@ -1239,12 +1317,14 @@ function renderWishlist() {
   const el = document.getElementById('wishlist-content');
   if (wishlist.length === 0) {
     el.innerHTML = `<div class="cart-empty"><div style="font-size:4rem">❤️</div><h3 style="color:var(--gray)">Wishlist is empty</h3><button class="checkout-btn" style="width:auto;padding:12px 24px" onclick="showPage('home-page')">Browse Products</button></div>`;
+    pageRendered['wishlist-page'] = true;
     return;
   }
   el.innerHTML = `<div style="padding:0 16px"><div class="products-grid">${wishlist.map(w => {
     const p = allProducts.find(x => x.id === w.id);
     return p ? renderCard(p) : '';
   }).join('')}</div></div>`;
+  pageRendered['wishlist-page'] = true;
 }
 
 // ===================== SEARCH =====================
@@ -1272,19 +1352,21 @@ function handleSearch(query) {
 function showPage(pageId) {
   // Close product detail overlay if open
   closeDetail();
+  // Hide all pages, show target instantly
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
   currentPage = pageId;
   const navMap = { 'home-page': 'nav-home', 'categories-page': 'nav-categories', 'cart-page': 'nav-cart', 'orders-page': 'nav-orders', 'profile-page': 'nav-profile' };
   if (navMap[pageId]) document.getElementById(navMap[pageId]).classList.add('active');
-  if (pageId === 'cart-page') renderCart();
-  if (pageId === 'wishlist-page') renderWishlist();
-  if (pageId === 'profile-page') initAuth();
-  if (pageId === 'auth-page') switchAuthTab('login');
-  if (pageId === 'orders-page') renderOrders();
-  if (pageId === 'categories-page') renderCatsPage();
-  if (pageId === 'products-page') renderAllProductsPage();
+  // Render pages only when needed (cache system)
+  if (pageId === 'cart-page') { renderCart(); }
+  else if (pageId === 'wishlist-page' && !pageRendered[pageId]) { renderWishlist(); pageRendered[pageId] = true; }
+  else if (pageId === 'profile-page') { initAuth(); }
+  else if (pageId === 'auth-page') { switchAuthTab('login'); }
+  else if (pageId === 'orders-page' && !pageRendered[pageId]) { renderOrders(); pageRendered[pageId] = true; }
+  else if (pageId === 'categories-page' && !pageRendered[pageId]) { renderCatsPage(); pageRendered[pageId] = true; }
+  else if (pageId === 'products-page' && !pageRendered[pageId]) { renderAllProductsPage(); pageRendered[pageId] = true; }
   requestAnimationFrame(() => window.scrollTo(0, 0));
 }
 
@@ -1323,6 +1405,7 @@ function renderOrders() {
         </div>
         <button class="checkout-btn" style="width:auto;padding:12px 28px" onclick="showPage('auth-page')">🔑 Sign In / Register</button>
       </div>`;
+    pageRendered['orders-page'] = true;
     return;
   }
   // User logged in — show orders from Shopify
@@ -1343,6 +1426,7 @@ function renderOrders() {
         <span style="color:var(--gray);margin-left:auto">›</span>
       </div>
     </div>`;
+  pageRendered['orders-page'] = true;
 }
 
 // ===================== AUTH =====================
@@ -1451,7 +1535,9 @@ async function doLogin() {
       // Fetch customer details
       await fetchAndSaveCustomer(token);
       showAuthMsg(sucEl, '✅ Login ho gaya! Welcome back 🎉', false);
-      setTimeout(() => { showPage('profile-page'); initAuth(); renderOrders(); }, 1200);
+      invalidatePage('orders-page');
+      invalidatePage('profile-page');
+      setTimeout(() => { showPage('profile-page'); initAuth(); }, 1200);
     }
   } catch (e) {
     // Storefront API token not configured — show helpful fallback
@@ -1534,6 +1620,8 @@ function doLogout() {
   currentUser = null;
   localStorage.removeItem('gt_user');
   showGuestProfile();
+  invalidatePage('orders-page');
+  invalidatePage('profile-page');
   showToast('Logout ho gaye 👋');
 }
 
